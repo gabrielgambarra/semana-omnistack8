@@ -31,7 +31,7 @@ export default function Login({ navigation }) {
         } catch (error) {
             return (
                 Alert.alert(
-                    `error.response.data.message`,
+                    `${error.response.data.message}`,
                     'The user does not exist',
                     [
                         { text: 'OK', onPress: () => navigation.navigate('Login') },
