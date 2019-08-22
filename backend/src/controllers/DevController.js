@@ -20,7 +20,7 @@ module.exports = {
 
     async store(req, res) {
         const { username } = req.body;
-        
+
         const userExisits = await Dev.findOne({
             user: username
         });
@@ -28,26 +28,24 @@ module.exports = {
         if (userExisits) {
             return res.json(userExisits);
         }
-        
+
         let response = null;
 
         try {
             response = await axios.get(`https://api.github.com/users/${username}`);
+
+            const { name, bio, avatar_url: avatar } = response.data;
+
+            const dev = await Dev.create({
+                name,
+                user: username,
+                bio,
+                avatar
+            })
+
+            return res.json(dev);
         } catch (error) {
             return res.status(error.response.status).json(error.response.data);
         }
-        
-        const { name, bio, avatar_url: avatar } = response.data;
-
-        const dev = await Dev.create({
-            name,
-            user: username,
-            bio,
-            avatar
-        })
-
-        return res.json(dev);
-
-
     }
 };
